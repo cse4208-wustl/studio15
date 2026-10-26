@@ -65,17 +65,26 @@ Record your answers in `ANSWERS.md` as you work. Include the names of everyone w
 
    Compile and run your program. In your answers, show the output your program produced.
 
-6. In this exercise you will see why variadic templates are useful by trying two older ways to write a function that takes "any number of arguments," using the same five variables from `main`.
+6. In this exercise you will use a variadic template for something other than printing: a wrapper that can call *any* function with *any* arguments. The standard library uses the same technique in `std::thread`, `std::invoke`, and `std::async`.
 
-   First, in the source file for your `main` function, declare and define a non-template function with a different name that has a `void` return type, takes a reference to a `std::ostream` and a `std::initializer_list<std::string>`, and inserts each element of the list into the `std::ostream` followed by a space. In `main`, call it with all five of your variables in a brace-enclosed list, as in `{s, c, obj, i, f}`.
+   In the source file for your `main` function, above `main`, declare and define three non-template functions with different signatures:
 
-   **Before compiling**, predict whether this call will compile, and if not, which of the five arguments will cause the problem. Then compile. In your answers, show the error you got and explain which arguments caused it and why. Then reduce the list until the call compiles. In your answers, say which arguments you kept, and explain what restriction an `initializer_list` places on its elements that a function parameter pack does not.
+   1. one that takes no parameters and returns an `int`
+   2. one that takes an `int` and a `float` and returns their product as a `float`
+   3. one that takes a reference to a const `std::string` and an `unsigned int` *n*, and returns a `std::string` containing *n* copies of the string
 
-   Next, comment out that call and add a call to the C-style variadic function `printf` (include `<cstdio>`) that tries to print the same five variables, using the format string `"%s %s %d %f\n"` and passing the `std::string`, the `const char *`, the `int`, and the `float`, in that order. Leave your class-type object out, because `printf` has no format specifier for it.
+   In your template source file, declare another global static unsigned integer variable that is initialized to 0, to count calls. In your template header and source files, declare and define a variadic function template named `call_counted` that:
 
-   **Before compiling**, predict whether this call will compile and what it will print. Then compile and run your program. In your answers, show any warnings the compiler gave and the output the program produced, and explain why `printf` accepted arguments it could not print correctly.
+   1. has a single template type parameter `F` for the function to call, followed by a template parameter pack
+   2. has an `auto` return type
+   3. takes a parameter `f` of type `F` and a function parameter pack of const references to the types in the template parameter pack (as in `const Args&... args`)
+   4. increments the call counter and then returns the result of calling `f` with the expanded function parameter pack (`f(args...)`)
 
-   Finally, in 2-3 sentences, explain what your variadic template from exercises 3-5 can do that neither of these alternatives can. Consider argument types, user-defined types like your class, and when type mistakes are caught.
+   In `main`, use `call_counted` to call each of your three functions with appropriate arguments, and print each result to `std::cout`. Then use `call_counted` to call a lambda that takes your five variables from exercise 2 as parameters and passes them all to your variadic template from exercise 4, passing those five variables to `call_counted` after the lambda. Finally, print the value of the call counter. Compile and run your program. In your answers, show your declaration and definition of `call_counted` and the output your program produced.
+
+   Next, add a call that passes `call_counted` your `int` and `float` function, but with your `std::string` variable in place of the `float` argument. **Before compiling**, predict whether this will compile, and if not, where the error will be reported. Then compile. In your answers, show the error and explain when and where the type mistake was caught. Then remove that call.
+
+   Finally, in 2-3 sentences, explain what you would need to write to get the same behavior as `call_counted` without parameter packs, and why a function that takes a non-const reference parameter (for example, `void reset(int& x)`) cannot be called through your `call_counted`.
 
 ## Deliverables
 
