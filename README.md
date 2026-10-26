@@ -25,8 +25,6 @@ Record your answers in `ANSWERS.md` as you work. Include the names of everyone w
 
    The repo already includes a `Makefile` that builds an executable named `studio15`. Copy the source and header files from your [Studio 14](https://github.com/cse4208-wustl/studio14) solution into this repo, and rename them as appropriate (for example, `studio14.h` to `studio15.h` and `studio14.cpp` to `studio15.cpp`). Update the `Makefile` so it lists all of your source and header files.
 
-   Modify the function template that you added in the previous studio so that it no longer inserts a short C-style string into the `std::ostream` to indicate that printing happened from the template function. Instead, it should simply insert the passed argument of the parameterized type into the `std::ostream`, followed by a space (`" "`).
-
    Remove the contents of your program's `main` function, except for the statement that returns a descriptively named symbol with value 0 to indicate success. Above that statement, declare and initialize variables of the following types:
 
    1. a `std::string` initialized with a C-style string
@@ -43,9 +41,13 @@ Record your answers in `ANSWERS.md` as you work. Include the names of everyone w
    2. has a `void` return type
    3. takes a reference to a `std::ostream`, a const reference to an argument of the first template parameter type, and a function parameter pack of const references to the types in the template parameter pack (that is, wrapping the template parameter pack with `const` and `&`, as in `const Args&... rest`)
 
-   The function template should print the first argument to the `std::ostream`, insert a space into the `std::ostream`, and then call itself recursively with the reference to the `std::ostream` followed by the function parameter pack.
+   The function template should insert `__PRETTY_FUNCTION__` into the `std::ostream`, followed by a space, the first argument, and a newline, and then call itself recursively with the reference to the `std::ostream` followed by the function parameter pack. (`__PRETTY_FUNCTION__` is a `g++` and `clang` extension that holds the full signature of the function it appears in, including the deduced template arguments.)
 
-   Then modify your `main` function so that, instead of calling the original non-variadic function multiple times, it passes all of the variables it declared into a single call to the variadic template. Compile and run your program and confirm that it produces the same output as in the previous exercise. In your answers, show your declaration and definition of the variadic template, and the line in `main` that calls it.
+   Then modify your `main` function so that, instead of calling the original non-variadic function multiple times, it passes all of the variables it declared into a single call to the variadic template. Compile and run your program. In your answers:
+
+   1. show your declaration and definition of the variadic template, and the line in `main` that calls it
+   2. show the output your program produced
+   3. explain how the deduced types of `T` and `Args` shown by `__PRETTY_FUNCTION__` change from one recursive call to the next, and why the last argument was printed by a different function
 
 4. In your template header and source files, declare and define another variadic template with a different name that:
 
