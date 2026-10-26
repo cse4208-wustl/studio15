@@ -65,6 +65,18 @@ Record your answers in `ANSWERS.md` as you work. Include the names of everyone w
 
    Compile and run your program. In your answers, show the output your program produced.
 
+6. In this exercise you will see why variadic templates are useful by trying two older ways to write a function that takes "any number of arguments," using the same five variables from `main`.
+
+   First, in the source file for your `main` function, declare and define a non-template function with a different name that has a `void` return type, takes a reference to a `std::ostream` and a `std::initializer_list<std::string>`, and inserts each element of the list into the `std::ostream` followed by a space. In `main`, call it with all five of your variables in a brace-enclosed list, as in `{s, c, obj, i, f}`.
+
+   **Before compiling**, predict whether this call will compile, and if not, which of the five arguments will cause the problem. Then compile. In your answers, show the error you got and explain which arguments caused it and why. Then reduce the list until the call compiles. In your answers, say which arguments you kept, and explain what restriction an `initializer_list` places on its elements that a function parameter pack does not.
+
+   Next, comment out that call and add a call to the C-style variadic function `printf` (include `<cstdio>`) that tries to print the same five variables, using the format string `"%s %s %d %f\n"` and passing the `std::string`, the `const char *`, the `int`, and the `float`, in that order. Leave your class-type object out, because `printf` has no format specifier for it.
+
+   **Before compiling**, predict whether this call will compile and what it will print. Then compile and run your program. In your answers, show any warnings the compiler gave and the output the program produced, and explain why `printf` accepted arguments it could not print correctly.
+
+   Finally, in 2-3 sentences, explain what your variadic template from exercises 3-5 can do that neither of these alternatives can. Consider argument types, user-defined types like your class, and when type mistakes are caught.
+
 ## Deliverables
 
 Commit and push all modified and added files, including `ANSWERS.md`, to the repo.
